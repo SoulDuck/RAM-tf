@@ -3,6 +3,18 @@ import os
 import numpy as np
 import random
 import tensorflow as tf
+from tensorflow.examples.tutorials.mnist import input_data
+
+
+
+def load_mnist(data_dir="MNIST_data/" , onehot = True):
+    mnist = input_data.read_data_sets("MNIST_data/", one_hot=onehot)
+
+    return mnist.train.images.reshape([-1,28,28,1]) , mnist.train.labels , \
+           mnist.validation.images.reshape([-1,28,28,1]) , mnist.validation.labels, \
+           mnist.test.images.reshape([-1,28,28,1]) , mnist.test.labels
+
+
 def type2(tfrecords_dir, onehot=True, resize=(299, 299) , random_shuffle = True ,limits = [3000 , 1000 , 1000 , 1000] , save_dir_name=None ):
     # normal : 3000
     # glaucoma : 1000
@@ -160,5 +172,7 @@ def reconstruct_tfrecord_rawdata(tfrecord_path, resize=(299, 299)):
 
 
 if '__main__' == __name__:
-    load_fundus('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug')
+    #load_fundus('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug')
+    train_imgs , train_labs , val_imgs , val_labs ,test_imgs , test_labs =load_mnist()
+    print np.shape(train_imgs)
 

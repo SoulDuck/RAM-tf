@@ -67,6 +67,9 @@ init =tf.group(tf.global_variables_initializer() , tf.local_variables_initialize
 sess.run(init)
 max_step = 10000
 ckpt_point =100
+
+
+exit()
 for step in range(max_step):
     if step % ckpt_point ==0 :
         acc,pred=validate(validation_images , validation_labels , 50 ,sess , pred , cost, x_ ,y_)

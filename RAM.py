@@ -68,11 +68,10 @@ sess.run(init)
 max_step = 10000
 ckpt_point =100
 
-
-exit()
 for step in range(max_step):
     if step % ckpt_point ==0 :
         acc,pred=validate(validation_images , validation_labels , 50 ,sess , pred , cost, x_ ,y_)
+        exit()
         print acc ,pred
     batch_xs, batch_ys =next_batch(train_images ,  train_labels , batch_size=60)
     feed_dict = {x_: batch_xs, y_: batch_ys, lr: 0.01}

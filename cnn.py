@@ -121,10 +121,8 @@ def ram(name, x): #Regeression Activation Map
     in_ch=x.get_shape()[-1]
     gap_x=tf.reduce_mean(x, (1,2) ,name='global_average_pooling')
     with tf.variable_scope(name) as scope:
-        ram_w=tf.get_variable('w' , shape=[in_ch] , initializer=tf.random_normal_initializer(0,0.01) , trainable=True)
-
-    logits=tf.reduce_sum(tf.multiply(gap_x , ram_w) , axis=1)
-    #logits=tf.reduce_sum(tf.matmul(gap_x , ram_w) , axis=1)
+        gap_w = tf.get_variable('w', shape=[in_ch, 1], initializer=tf.random_normal_initializer(0, 0.01),trainable=True)
+    logits = tf.matmul(gap_x, gap_w, name='logits')
     return logits
 
 def lr_schedule(step ,lr_iters , lr_values):

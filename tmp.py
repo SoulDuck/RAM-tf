@@ -1,7 +1,11 @@
 import numpy as np
 import tensorflow as tf
 
-
+a=np.array([[0.1,0.1,0.1],[0.5,0.6,1]])
+a=a+0.5
+a=a.astype(int)
+print a
+exit()
 a=np.array([[1,1,1],[2,2,2]])
 print np.shape(a)
 b=np.array(3)

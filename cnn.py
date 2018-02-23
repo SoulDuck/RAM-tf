@@ -176,7 +176,7 @@ def algorithm(y_conv , y_ , learning_rate , optimizer , use_l2_loss , activation
                      'momentum': tf.train.MomentumOptimizer(learning_rate , momentum=0.9 , use_nesterov=True)}
 
 
-    if activation=='softmax' and cost_func =='cost_func':
+    if activation=='softmax' and cost_func =='cross_entropy':
         pred = tf.nn.softmax(y_conv, name='softmax')
         cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv , labels=y_) , name='cost')
 

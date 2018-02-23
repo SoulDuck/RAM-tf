@@ -1,9 +1,9 @@
 import tensorflow as tf
 from cnn import convolution2d , max_pool , ram , algorithm , convolution2d_manual
 from data import type2
-
-train_images , train_labels , train_filenames , test_images , test_labels , test_filenames=\
-    type2('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug' ,onehot=False)
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
 
 # Define Input
 n_classes = 2
@@ -24,20 +24,50 @@ for i in range(13):
     if i in pool_indices:
         'max pool'
         layer=max_pool('maxPool_{}'.format(i), layer)
-logits=ram('ram' ,  layer)
+top_conv=tf.identity(layer , 'top_conv')
+logits=ram('ram' ,  top_conv)
+
 
 # Build Optimizer
 pred,pred_cls , cost , train_op,correct_pred ,accuracy = \
-    algorithm(y_conv=logits , y_=y_ ,learning_rate=lr , optimizer='sgd' , use_l2_loss=False ,activation='mse')
-
-
+    algorithm(y_conv=logits , y_=y_ ,learning_rate=lr , optimizer='sgd' , use_l2_loss=True ,activation='mse')
 
 sess= tf.Session()
 init =tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
 sess.run(init)
+
+
+
+
+
+if '__main__' == __name__:
+    pass;
+train_images , train_labels , train_filenames , test_images , test_labels , test_filenames=\
+    type2('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug' ,onehot=False)
 feed_dict = {x_ : train_images[0:1] , y_ : train_labels  , lr:0.01}
 _ , loss =sess.run([train_op , cost], feed_dict=feed_dict)
-print loss
+
+
+
+ram_w=sess.run(['ram/w:0']  , feed_dict=feed_dict)
+ram_w=np.squeeze(ram_w)
+top_conv=sess.run(['top_conv:0']  , feed_dict=feed_dict)
+top_conv=np.squeeze(top_conv)
+print np.shape(ram_w)
+print np.shape(top_conv)
+top_conv=top_conv * ram_w
+print np.shape(top_conv)
+top_conv=np.sum(top_conv , axis=2)
+print np.shape(top_conv)
+print np.max(top_conv)
+print np.min(top_conv)
+actmap=Image.fromarray(top_conv*255)
+actmap=actmap.resize([299,299] , Image.ANTIALIAS)
+plt.imshow(actmap)
+plt.show()
+
+
+
 
 
 # Training

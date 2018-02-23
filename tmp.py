@@ -14,3 +14,13 @@ sess=tf.Session()
 init= tf.global_variables_initializer()
 sess.run(init)
 print sess.run(tf_c)
+
+
+a=np.zeros([2,2,5])
+for i in range(5):
+    a[:,:,i]=i
+a=a*range(5,10)
+print a
+
+a=np.sum(a , axis=2)
+print a

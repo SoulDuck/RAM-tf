@@ -4,6 +4,19 @@ from data import type2
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+from utils import next_batch
+import argparse
+
+
+
+parser =argparse.ArgumentParser()
+parser.add_argument('--data_dir' , type=str  , default='../PycharmProjects/fundus/fundus_300')
+args=parser.parse_args()
+data_dir=args.data_dir
+
+# Load Data
+train_images , train_labels , train_filenames , test_images , test_labels , test_filenames=type2( data_dir ,onehot=False)
+
 
 # Define Input
 n_classes = 2
@@ -35,17 +48,15 @@ pred,pred_cls , cost , train_op,correct_pred ,accuracy = \
 sess= tf.Session()
 init =tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
 sess.run(init)
+max_step = 10000
 
-
-
-
-
+for step in max_step:
+    batch_xs, batch_ys =next_batch(train_images ,  train_labels , batch_size=60)
+    feed_dict = {x_: train_images[0:1], y_: train_labels, lr: 0.01}
+    _, loss = sess.run([train_op, cost], feed_dict=feed_dict)
+    print loss
 if '__main__' == __name__:
     pass;
-train_images , train_labels , train_filenames , test_images , test_labels , test_filenames=\
-    type2('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug' ,onehot=False)
-feed_dict = {x_ : train_images[0:1] , y_ : train_labels  , lr:0.01}
-_ , loss =sess.run([train_op , cost], feed_dict=feed_dict)
 
 
 

@@ -123,6 +123,10 @@ def ram(name, x): #Regeression Activation Map
     with tf.variable_scope(name) as scope:
         gap_w = tf.get_variable('w', shape=[in_ch, 1], initializer=tf.random_normal_initializer(0, 0.01),trainable=True)
     logits = tf.matmul(gap_x, gap_w, name='logits')
+
+    print 'layer name : ', name
+    print 'layer shape : ', logits.get_shape()
+
     return logits
 
 def lr_schedule(step ,lr_iters , lr_values):

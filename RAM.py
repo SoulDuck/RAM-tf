@@ -1,6 +1,6 @@
 import tensorflow as tf
 from cnn import convolution2d , max_pool , ram , algorithm , convolution2d_manual , affine
-from data import type2 , load_mnist
+from data import type2 , load_mnist , load_binary_mnist
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -20,7 +20,8 @@ data_dir=args.data_dir
 #train_images , train_labels , train_filenames , test_images , test_labels , test_filenames=type2( data_dir ,onehot=False)
 
 # Mnist
-train_images , train_labels , validation_images , validation_labels , test_images , test_labels =load_mnist()
+train_images , train_labels , validation_images , validation_labels , test_images , test_labels = load_binary_mnist()
+
 
 h,w ,ch = np.shape(test_images)[1:]
 n_classes = np.shape(train_labels)[-1]
@@ -30,7 +31,6 @@ y_=tf.placeholder(dtype=tf.float32 , shape=[None , n_classes],name ='y_')
 lr = tf.placeholder(dtype=tf.float32 , shape=None ,name ='lr_')
 
 # Building Layer
-layer=x_
 pool_indices=[1,4,7,10]
 out_chs=[32,32,64,64,64,128,128,128,256,256,256,512,512]
 filters=[5,3,5,3,3,3,3,3,3,3,3,3,3]
@@ -44,6 +44,7 @@ strides=[2,1,2,1,1] #,1,1,1,1,1,1,1,1]
 
 
 #Building Network
+layer=x_
 assert len(out_chs) == len(filters)
 n_layers=len(out_chs)
 for i in range(n_layers):
@@ -56,8 +57,6 @@ top_conv=tf.identity(layer , 'top_conv')
 logits=affine('fc1',top_conv, 10 , activation= None)
 
 #logits=ram('ram' ,  top_conv)
-
-
 # Build Optimizer
 pred,pred_cls , cost , train_op,correct_pred ,accuracy = \
     algorithm(y_conv=logits , y_=y_ ,learning_rate=lr , optimizer='sgd' , use_l2_loss=True ,activation='softmax')

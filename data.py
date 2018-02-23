@@ -4,7 +4,66 @@ import numpy as np
 import random
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+import numpy as np
+from utils import plot_images
+def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
+    #load 0,1
+    mnist = input_data.read_data_sets("MNIST_data/", one_hot=onehot)
 
+    train_indices_0 = np.where([np.argmax(mnist.train.labels , axis=1) == 0 ])[1]
+    train_indices_1 = np.where([np.argmax(mnist.train.labels , axis=1) == 1 ])[1]
+
+
+    def _get_images(images , labels , ind):
+        return images[np.where([np.argmax(labels, axis=1) == ind])[1]]
+
+    def _get_labels(labels, ind):
+
+        mat_=np.zeros([len(np.where([np.argmax(labels, axis=1) == ind])[1]) , 2])
+        mat_[:,ind] = 1
+        return mat_
+
+    train_0_imgs, val_0_imgs, test_0_imgs, train_1_imgs, val_1_imgs, test_1_imgs = map(
+    lambda (images, labels, ind ): _get_images(images, labels, ind), [(mnist.train.images, mnist.train.labels, 0),
+                                                              (mnist.validation.images, mnist.validation.labels, 0),
+                                                              (mnist.test.images, mnist.test.labels, 0),
+                                                              (mnist.train.images, mnist.train.labels, 1),
+                                                              (mnist.validation.images, mnist.validation.labels, 1),
+                                                              (mnist.test.images, mnist.test.labels, 1)])
+
+    train_0_labs, val_0_labs, test_0_labs, train_1_labs, val_1_labs, test_1_labs = map(
+    lambda (labels, ind ): _get_labels(labels, ind), [(mnist.train.labels, 0),
+                                                          (mnist.validation.labels, 0),
+                                                          (mnist.test.labels, 0),
+                                                          (mnist.train.labels, 1),
+                                                          (mnist.validation.labels, 1),
+                                                          (mnist.test.labels, 1)])
+
+    train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs = map(
+    lambda (elements_0, elements_1): np.vstack([elements_0, elements_1]), [(train_0_imgs , train_1_imgs),
+                                                                           (train_0_labs , train_1_labs),
+                                                                           (val_0_imgs, val_1_imgs),
+                                                                           (val_0_labs, val_1_labs),
+                                                                           (test_0_imgs, test_1_imgs),
+                                                                           (test_0_labs, test_1_labs),])
+
+    train_imgs , val_imgs ,test_imgs =map(lambda imgs: imgs.reshape([-1,28,28,1]) , [train_imgs , val_imgs ,test_imgs])
+
+
+    print np.shape(train_imgs)
+    print np.shape(val_imgs)
+    print np.shape(train_labs)
+    print np.shape(val_labs)
+    print np.shape(test_imgs)
+    print np.shape(test_labs)
+    """
+    plot_images(val_imgs[:10])
+    plot_images(train_imgs[:10])
+    plot_images(train_imgs[-10:])
+    plot_images(val_imgs[-10:])
+    plot_images(test_imgs[:10])
+    plot_images(test_imgs[-10:])
+    """
 
 
 def load_mnist(data_dir="MNIST_data/" , onehot = True):
@@ -173,6 +232,6 @@ def reconstruct_tfrecord_rawdata(tfrecord_path, resize=(299, 299)):
 
 if '__main__' == __name__:
     #load_fundus('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug')
-    train_imgs , train_labs , val_imgs , val_labs ,test_imgs , test_labs =load_mnist()
-    print np.shape(train_imgs)
+    #train_imgs , train_labs , val_imgs , val_labs ,test_imgs , test_labs =load_mnist()
+    load_binary_mnist()
 

@@ -24,3 +24,6 @@ print a
 
 a=np.sum(a , axis=2)
 print a
+
+
+print map(lambda (a,b): a*b , [(1,3) , (2,4) , (3,6)] )

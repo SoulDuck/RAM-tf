@@ -1,5 +1,8 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
+import random
+import math
 def next_batch(imgs, labs, batch_size):
     indices = random.sample(range(np.shape(imgs)[0]), batch_size)
     if not type(imgs).__module__ == np.__name__:  # check images type to numpy
@@ -67,5 +70,24 @@ def validate(val_imgs , val_labs , batch_size ,sess , pred_tensor ,cost_tensor ,
     return acc ,cost
 
 
+def plot_images(imgs , names=None , random_order=False , savepath=None):
+    h=math.ceil(math.sqrt(len(imgs)))
+    fig=plt.figure()
 
+    for i in range(len(imgs)):
+        ax=fig.add_subplot(h,h,i+1)
+        if random_order:
+            ind=random.randint(0,len(imgs)-1)
+        else:
+            ind=i
+        img=imgs[ind]
+        if np.shape(img)[-1] == 1:
+            img = np.squeeze(img)
+
+        plt.imshow(img)
+        if not names==None:
+            ax.set_xlabel(names[ind])
+    if not savepath is None:
+        plt.savefig(savepath)
+    plt.show()
 

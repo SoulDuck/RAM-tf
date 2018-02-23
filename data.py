@@ -46,7 +46,7 @@ def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
                                                                            (val_0_labs, val_1_labs),
                                                                            (test_0_imgs, test_1_imgs),
                                                                            (test_0_labs, test_1_labs),])
-
+    return train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs
     train_imgs , val_imgs ,test_imgs =map(lambda imgs: imgs.reshape([-1,28,28,1]) , [train_imgs , val_imgs ,test_imgs])
 
 

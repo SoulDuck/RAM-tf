@@ -49,7 +49,6 @@ sess= tf.Session()
 init =tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
 sess.run(init)
 max_step = 10000
-
 for step in max_step:
     batch_xs, batch_ys =next_batch(train_images ,  train_labels , batch_size=60)
     feed_dict = {x_: train_images[0:1], y_: train_labels, lr: 0.01}
@@ -60,6 +59,8 @@ if '__main__' == __name__:
 
 
 
+
+"""
 ram_w=sess.run(['ram/w:0']  , feed_dict=feed_dict)
 ram_w=np.squeeze(ram_w)
 top_conv=sess.run(['top_conv:0']  , feed_dict=feed_dict)
@@ -77,7 +78,7 @@ actmap=actmap.resize([299,299] , Image.ANTIALIAS)
 plt.imshow(actmap)
 plt.show()
 
-
+"""
 
 
 

@@ -49,7 +49,7 @@ sess= tf.Session()
 init =tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
 sess.run(init)
 max_step = 10000
-for step in max_step:
+for step in range(max_step):
     batch_xs, batch_ys =next_batch(train_images ,  train_labels , batch_size=60)
     feed_dict = {x_: train_images[0:1], y_: train_labels, lr: 0.01}
     _, loss = sess.run([train_op, cost], feed_dict=feed_dict)

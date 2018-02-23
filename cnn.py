@@ -154,7 +154,7 @@ def l2_loss(optimizer ,loss_tensor ):
         return train_op
 
 
-def algorithm(y_conv , y_ , learning_rate , optimizer , use_l2_loss , activation='softmax'):
+def algorithm(y_conv , y_ , learning_rate , optimizer , use_l2_loss , activation='softmax' , cost_func='cross_entropy'):
     try:
         assert int(y_conv.get_shape()[-1]) == int(y_.get_shape()[-1]) \
             , 'logits : {} true labels :{}'.format(y_conv.get_shape()[-1] , y_.get_shape()[-1])
@@ -175,20 +175,23 @@ def algorithm(y_conv , y_ , learning_rate , optimizer , use_l2_loss , activation
     optimizer_dic = {'sgd': tf.train.GradientDescentOptimizer(learning_rate), 'adam': tf.train.AdamOptimizer(learning_rate),
                      'momentum': tf.train.MomentumOptimizer(learning_rate , momentum=0.9 , use_nesterov=True)}
 
-    pred=tf.nn.softmax(y_conv , name='softmax')
-    pred_cls=tf.argmax(pred , axis=1 , name='pred_cls')
-    if activation=='mse':
-        print 'mse'
-        cost=tf.losses.mean_squared_error(labels=y_ ,predictions=y_conv )
-    elif activation=='softmax':
+
+    if activation=='softmax' and cost_func =='cost_func':
+        pred = tf.nn.softmax(y_conv, name='softmax')
         cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_conv , labels=y_) , name='cost')
+
+    elif activation =='sigmoid' and cost_func =='mse':
+        pred =tf.nn.sigmoid(y_conv)
+        cost = tf.reduce_mean(tf.losses.mean_squared_error(predictions=y_conv, labels=y_), name='cost')
     else:
-        raise  AssertionError
+        raise AssertionError
 
     if use_l2_loss:
         train_op=l2_loss(optimizer_dic[optimizer], cost)
     else:
         train_op = optimizer_dic[optimizer].minimize(cost,name='train_op')
+
+    pred_cls = tf.argmax(pred, axis=1, name='pred_cls')
     correct_pred=tf.equal(tf.argmax(y_conv , 1) , tf.argmax(y_ , 1) , name='correct_pred')
     accuracy =  tf.reduce_mean(tf.cast(correct_pred , dtype=tf.float32) , name='accuracy')
     return pred,pred_cls , cost , train_op,correct_pred ,accuracy

@@ -8,7 +8,7 @@ import numpy as np
 from utils import plot_images
 def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
     #load 0,1
-    mnist = input_data.read_data_sets("MNIST_data/", one_hot=onehot)
+    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
     train_indices_0 = np.where([np.argmax(mnist.train.labels , axis=1) == 0 ])[1]
     train_indices_1 = np.where([np.argmax(mnist.train.labels , axis=1) == 1 ])[1]
@@ -47,16 +47,19 @@ def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
                                                                            (test_0_imgs, test_1_imgs),
                                                                            (test_0_labs, test_1_labs),])
     train_imgs , val_imgs ,test_imgs =map(lambda imgs: imgs.reshape([-1,28,28,1]) , [train_imgs , val_imgs ,test_imgs])
+    if onehot ==False:
+        train_labs , val_labs ,test_labs=map(lambda labels : np.argmax(labels ,axis=1) , [train_labs , val_labs , test_labs])
     return train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs
 
 
+    """
     print np.shape(train_imgs)
     print np.shape(val_imgs)
     print np.shape(train_labs)
     print np.shape(val_labs)
     print np.shape(test_imgs)
     print np.shape(test_labs)
-    """
+    
     plot_images(val_imgs[:10])
     plot_images(train_imgs[:10])
     plot_images(train_imgs[-10:])
@@ -64,6 +67,7 @@ def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
     plot_images(test_imgs[:10])
     plot_images(test_imgs[-10:])
     """
+
 
 
 def load_mnist(data_dir="MNIST_data/" , onehot = True):

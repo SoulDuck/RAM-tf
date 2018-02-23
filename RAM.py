@@ -20,9 +20,7 @@ data_dir=args.data_dir
 #train_images , train_labels , train_filenames , test_images , test_labels , test_filenames=type2( data_dir ,onehot=False)
 
 # Mnist
-train_images , train_labels , validation_images , validation_labels , test_images , test_labels = load_binary_mnist()
-
-
+train_images , train_labels , validation_images , validation_labels , test_images , test_labels = load_binary_mnist(onehot=False)
 h,w ,ch = np.shape(test_images)[1:]
 n_classes = np.shape(train_labels)[-1]
 # Define Input
@@ -54,12 +52,12 @@ for i in range(n_layers):
         layer=max_pool('maxPool_{}'.format(i), layer)
 
 top_conv=tf.identity(layer , 'top_conv')
-logits=affine('fc1',top_conv, 10 , activation= None)
+logits=affine('fc1',top_conv, n_classes , activation= None)
 
 #logits=ram('ram' ,  top_conv)
 # Build Optimizer
 pred,pred_cls , cost , train_op,correct_pred ,accuracy = \
-    algorithm(y_conv=logits , y_=y_ ,learning_rate=lr , optimizer='sgd' , use_l2_loss=True ,activation='softmax')
+    algorithm(y_conv=logits , y_=y_ ,learning_rate=lr , optimizer='sgd' , use_l2_loss=True ,activation='sigmoid' , cost_func='mse')
 
 sess= tf.Session()
 init =tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())

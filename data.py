@@ -47,17 +47,18 @@ def load_binary_mnist(data_dir="MNIST_data/" , onehot = True  , min_binary=0 , m
                                                                            (test_0_imgs, test_1_imgs),
                                                                            (test_0_labs, test_1_labs),])
     train_imgs , val_imgs ,test_imgs =map(lambda imgs: imgs.reshape([-1,28,28,1]) , [train_imgs , val_imgs ,test_imgs])
+
     if onehot ==False:
         train_labs , val_labs ,test_labs=map(lambda labels : np.argmax(labels ,axis=1).reshape([-1,1]) , [train_labs , val_labs , test_labs])
 
 
     def _set_label(labels , min_value , max_value):
         assert min_value != 1 and max_value !=0 and min_value < max_value
-        labels = labels[np.where(labels == 1)[0]] = min_value
-        labels = labels[np.where(labels == 0)[0]] = max_value
+        labels[np.where(labels == 0)[0]] = min_value
+        labels[np.where(labels == 1)[0]] = max_value
         return labels
 
-    train_labs ,val_labs ,test_labs=map(lambda labels: _set_label(labels , -1,1) , train_labs , val_labs , test_labs )
+    train_labs, val_labs, test_labs = map(lambda labels: _set_label(labels, -1, 1), [train_labs, val_labs, test_labs])
 
 
     return train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs
@@ -232,5 +233,5 @@ def reconstruct_tfrecord_rawdata(tfrecord_path, resize=(299, 299)):
 if '__main__' == __name__:
     #load_fundus('/Users/seongjungkim/PycharmProjects/fundus/fundus_300_debug')
     #train_imgs , train_labs , val_imgs , val_labs ,test_imgs , test_labs =load_mnist()
-    load_binary_mnist()
-
+    train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs=load_binary_mnist(onehot=False , min_binary=-1 , max_binary=1)
+    print train_labs

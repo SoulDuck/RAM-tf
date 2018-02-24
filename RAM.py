@@ -52,7 +52,8 @@ for i in range(n_layers):
         layer=max_pool('maxPool_{}'.format(i), layer)
 
 top_conv=tf.identity(layer , 'top_conv')
-logits=affine('fc1',top_conv, n_classes , activation= None)
+logits=ram('ram',top_conv)
+
 
 #logits=ram('ram' ,  top_conv)
 # Build Optimizer

@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
 from utils import plot_images
-def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
+def load_binary_mnist(data_dir="MNIST_data/" , onehot = True  , min_binary=0 , max_binary=1):
     #load 0,1
     mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
@@ -50,24 +50,18 @@ def load_binary_mnist(data_dir="MNIST_data/" , onehot = True ):
     if onehot ==False:
         train_labs , val_labs ,test_labs=map(lambda labels : np.argmax(labels ,axis=1).reshape([-1,1]) , [train_labs , val_labs , test_labs])
 
+
+    def _set_label(labels , min_value , max_value):
+        assert min_value != 1 and max_value !=0 and min_value < max_value
+        labels = labels[np.where(labels == 1)[0]] = min_value
+        labels = labels[np.where(labels == 0)[0]] = max_value
+        return labels
+
+    train_labs ,val_labs ,test_labs=map(lambda labels: _set_label(labels , -1,1) , train_labs , val_labs , test_labs )
+
+
     return train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs
 
-
-    """
-    print np.shape(train_imgs)
-    print np.shape(val_imgs)
-    print np.shape(train_labs)
-    print np.shape(val_labs)
-    print np.shape(test_imgs)
-    print np.shape(test_labs)
-    
-    plot_images(val_imgs[:10])
-    plot_images(train_imgs[:10])
-    plot_images(train_imgs[-10:])
-    plot_images(val_imgs[-10:])
-    plot_images(test_imgs[:10])
-    plot_images(test_imgs[-10:])
-    """
 
 
 

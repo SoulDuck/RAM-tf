@@ -58,7 +58,7 @@ def load_binary_mnist(data_dir="MNIST_data/" , onehot = True  , min_binary=0 , m
         labels[np.where(labels == 1)[0]] = max_value
         return labels
 
-    train_labs, val_labs, test_labs = map(lambda labels: _set_label(labels, -1, 1), [train_labs, val_labs, test_labs])
+    train_labs, val_labs, test_labs = map(lambda labels: _set_label(labels, min_binary, max_binary), [train_labs, val_labs, test_labs])
 
 
     return train_imgs, train_labs, val_imgs, val_labs, test_imgs, test_labs
